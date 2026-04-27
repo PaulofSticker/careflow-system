@@ -1,8 +1,8 @@
-<<<<<<< HEAD
-# CareFlow - Client Management System
+# CareFlow – Client Management & Scheduling System
+Backend first Django system for managing recurring client care packages, scheduling, session tracking, installment payments, and business rule driven workflows.
 
 ## Overview
-CareFlow is a web-based system developed to manage client scheduling, service packages, and operational workflows.
+CareFlow is a web based system developed to manage client scheduling, service packages, and operational workflows.
 
 ## Problem
 Many service-based businesses struggle with:
