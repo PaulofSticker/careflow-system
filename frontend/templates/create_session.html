@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<header class="topbar">
+    <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <h1>Create Session</h1>
+    </div>
+    <p>Schedule a new service session</p>
+</header>
+
+<div class="content">
+    <div class="card">
+        <h2 class="section-title">New Session</h2>
+
+        {% if error_message %}
+        <div style="background:#ffe8e8; color:#a30000; padding:12px; border-radius:8px; margin-bottom:15px;">
+            {{ error_message }}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>Date</strong></label><br>
+                <input
+                    type="date"
+                    name="scheduled_date"
+                    id="scheduled_date"
+                    value="{{ selected_date }}"
+                    min="{{ min_date }}"
+                    style="width: 300px; padding: 10px; margin-top: 5px;"
+                >
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>Time</strong></label><br>
+                <input
+                    type="time"
+                    name="scheduled_time"
+                    id="scheduled_time"
+                    value="{{ selected_time }}"
+                    step="900"
+                    style="width: 300px; padding: 10px; margin-top: 5px;"
+                >
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>Client</strong></label><br>
+                <select
+                    name="client"
+                    onchange="
+                        const date = document.getElementById('scheduled_date').value;
+                        const time = document.getElementById('scheduled_time').value;
+                        window.location.href = '?client=' + this.value + '&date=' + date + '&time=' + time;
+                    "
+                    style="width: 300px; padding: 10px; margin-top: 5px;"
+                >
+                    <option value="">Select client</option>
+                    {% for client in clients %}
+                        <option value="{{ client.id }}" {% if selected_client == client.id|stringformat:"s" %}selected{% endif %}>
+                            {{ client.full_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>Package</strong></label><br>
+                <select name="package" style="width: 300px; padding: 10px; margin-top: 5px;">
+                    <option value="">Select package</option>
+
+                    {% for package in packages %}
+                        <option value="{{ package.id }}"
+                            {% if selected_package == package.id|stringformat:"s" %}selected{% endif %}
+                            {% if package.status != 'active' or package.is_expired or package.sessions_remaining <= 0 %}
+                                disabled
+                            {% endif %}
+                        >
+                            {{ package.client.full_name }} - {{ package }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>Notes</strong></label><br>
+                <textarea name="notes" rows="4" style="width: 500px; padding: 10px; margin-top: 5px;">{{ notes }}</textarea>
+            </div>
+
+            <button type="submit" class="btn-map">Save Session</button>
+        </form>
+    </div>
+</div>
+
+<script>
+const dateInput = document.getElementById('scheduled_date');
+const timeInput = document.getElementById('scheduled_time');
+
+const minDate = "{{ min_date }}";
+const minTime = "{{ min_time }}";
+
+function updateTimeMin() {
+    if (dateInput.value === minDate) {
+        timeInput.min = minTime;
+    } else {
+        timeInput.min = "05:00";
+    }
+}
+
+dateInput.addEventListener('change', updateTimeMin);
+window.addEventListener('load', updateTimeMin);
+</script>
+
+{% endblock %}

@@ -1,0 +1,273 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BODY */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    color: #222;
+}
+
+/* LAYOUT */
+.layout {
+    display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 220px;
+    background: #111;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+    position: fixed;
+}
+
+.sidebar .logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ff7a00;
+    margin-bottom: 30px;
+}
+
+.menu a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.menu a:hover {
+    color: #ff7a00;
+}
+
+/* MAIN AREA */
+.main-area {
+    margin-left: 220px;
+    width: 100%;
+}
+
+/* TOPBAR */
+.topbar {
+    background: #fff;
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* CONTENT */
+.content {
+    padding: 30px;
+}
+
+/* TITLES */
+.section-title {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+/* CARDS GRID */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* SCHEDULE LIST */
+.schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.schedule-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.schedule-time {
+    min-width: 60px;
+    font-weight: bold;
+    color: #ff7a00;
+}
+
+.schedule-info {
+    flex: 1;
+}
+
+.schedule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.schedule-client {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.session-counter {
+    font-size: 12px;
+    background: #fff3e8;
+    color: #ff7a00;
+    padding: 4px 8px;
+    border-radius: 999px;
+}
+
+.schedule-package {
+    font-size: 14px;
+    color: #555;
+}
+
+.schedule-address {
+    font-size: 13px;
+    color: #777;
+    margin-top: 5px;
+}
+
+.action-buttons {
+    margin-top: 8px;
+    display: flex;
+    gap: 10px;
+}
+
+/* MAP BUTTON */
+.btn-map {
+    display: inline-block;
+    background: linear-gradient(90deg, #ff7a00, #ff9a2a);
+    color: white;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+/* SLOTS GRID */
+.slots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* SLOT BUTTON FIX (CRITICAL) */
+a.slot-button {
+    display: inline-block !important;
+    background: white !important;
+    border: 2px solid #ff7a00 !important;
+    border-radius: 10px !important;
+    padding: 8px 10px !important;
+    font-weight: bold !important;
+    color: #ff7a00 !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    transition: 0.2s !important;
+    font-size: 12px !important;
+    min-width: 60px !important;
+    text-align: center !important;
+}
+
+a.slot-button:hover {
+    background: #ff7a00 !important;
+    color: white !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+
+    .sidebar {
+        position: absolute;
+        transform: translateX(0);
+        transition: 0.3s;
+    }
+
+    .sidebar.collapsed {
+        transform: translateX(-100%);
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .main-area {
+        margin-left: 0;
+    }
+    .status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-active {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-inactive {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.status-paused {
+    background: #fff8e1;
+    color: #ef6c00;
+}
+.client-link {
+    color: inherit;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.client-link:hover {
+    color: #ff7a00;
+}
+.slot-button {
+    border: 2px solid #ff7a00;
+    color: #ff7a00;
+    background: white;
+}
+
+.slot-button:hover {
+    background: #ff7a00;
+    color: white;
+    transform: scale(1.05);
+}
+}

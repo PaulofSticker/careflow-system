@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header class="topbar">
+    <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <h1>Installments</h1>
+    </div>
+    <p>Financial installments</p>
+</header>
+
+<div class="content">
+    {% for installment in installments %}
+        <div class="card">
+            <strong>{{ installment.package.client.full_name }}</strong><br>
+            Installment {{ installment.installment_number }}<br>
+            ${{ installment.amount }}<br>
+            Due: {{ installment.due_date }}<br>
+            Status: {{ installment.get_status_display }}
+        </div>
+    {% empty %}
+        <p>No installments found.</p>
+    {% endfor %}
+</div>
+{% endblock %}

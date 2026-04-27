@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Client Detail - CareFlow</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">CareFlow</div>
+        <nav class="menu">
+            <a href="{% url 'dashboard' %}" onclick="closeSidebarOnMobile()">Dashboard</a>
+            <a href="{% url 'clients_list' %}" onclick="closeSidebarOnMobile()">Clients</a>
+            <a href="{% url 'packages_list' %}" onclick="closeSidebarOnMobile()">Packages</a>
+            <a href="{% url 'sessions_list' %}" onclick="closeSidebarOnMobile()">Sessions</a>
+            <a href="{% url 'installments_list' %}" onclick="closeSidebarOnMobile()">Installments</a>
+        </nav>
+    </aside>
+
+    <div class="main-area">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+                <h1>Client Detail</h1>
+            </div>
+            <p>Client information and service history</p>
+        </header>
+
+        <main class="content">
+
+            <h2 class="section-title">{{ client.full_name }}</h2>
+
+            <div class="card">
+                <p><strong>Email:</strong> {{ client.email }}</p>
+                <p><strong>Phone:</strong> {{ client.phone }}</p>
+                <p><strong>Status:</strong> {{ client.status|title }}</p>
+                <p><strong>Address:</strong>
+                    {{ client.street }}, {{ client.city }}, {{ client.state }}, {{ client.zip_code }}
+                </p>
+                <p><strong>Notes:</strong> {{ client.notes|default:"No notes available." }}</p>
+            </div>
+
+            <h2 class="section-title">Packages</h2>
+            {% if packages %}
+                <div class="schedule-list">
+                    {% for package in packages %}
+                        <div class="schedule-item">
+                            <div class="schedule-info">
+                                <div class="schedule-header">
+                                    <div class="schedule-client">
+                                        {{ package }}
+                                    </div>
+                                    <div class="session-counter">
+                                        {{ package.sessions_used }}/{{ package.total_sessions }}
+                                    </div>
+                                </div>
+
+                                <div class="schedule-package">
+                                    Status: {{ package.status|title }}
+                                </div>
+
+                                <div class="schedule-address">
+                                    Start: {{ package.start_date }} | End: {{ package.end_date }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card">
+                    <a href="{% url 'package_create' client.id %}" class="btn-map">+ New Package</a>
+                    <p>No packages found for this client.</p>
+                </div>
+            {% endif %}
+
+            <h2 class="section-title">Session History</h2>
+            {% if sessions %}
+                <div class="schedule-list">
+                    {% for session in sessions %}
+                        <div class="schedule-item">
+                            <div class="schedule-time">
+                                {{ session.scheduled_time|time:"H:i" }}
+                            </div>
+
+                            <div class="schedule-info">
+                                <div class="schedule-header">
+                                    <div class="schedule-client">
+                                        {{ session.scheduled_date }}
+                                    </div>
+
+                                    <div class="status-badge
+                                        {% if session.status == 'scheduled' %}status-paused{% endif %}
+                                        {% if session.status == 'completed' %}status-active{% endif %}
+                                        {% if session.status == 'cancelled' %}status-inactive{% endif %}">
+                                        {{ session.status|title }}
+                                    </div>
+                                </div>
+
+                                <div class="schedule-package">
+                                    {{ session.package }}
+                                </div>
+
+                                <div class="schedule-address">
+                                    {{ session.notes|default:"No notes." }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card">
+                    <p>No sessions found for this client.</p>
+                </div>
+            {% endif %}
+
+        </main>
+    </div>
+</div>
+
+<script>
+function toggleMenu() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('collapsed');
+}
+
+function closeSidebarOnMobile() {
+    if (window.innerWidth <= 768) {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.add('collapsed');
+    }
+}
+</script>
+
+</body>
+</html>

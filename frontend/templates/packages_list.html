@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header class="topbar">
+    <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <h1>Packages</h1>
+    </div>
+    <p>Registered packages</p>
+</header>
+
+<div class="content">
+    {% for package in packages %}
+        <div class="card">
+            <strong>{{ package.client.full_name }}</strong><br>
+            {{ package.get_package_type_display }}<br>
+            ${{ package.total_price }}<br>
+            {{ package.get_status_display }}<br>
+            Sessions: {{ package.sessions_used }}/{{ package.total_sessions }}
+        </div>
+    {% empty %}
+        <p>No packages found.</p>
+    {% endfor %}
+</div>
+{% endblock %}

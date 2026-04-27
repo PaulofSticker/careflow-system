@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header class="topbar">
+    <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <h1>Sessions</h1>
+    </div>
+    <p>Scheduled sessions</p>
+</header>
+
+<div class="content">
+    <div style="margin-bottom: 20px;">
+        <a href="{% url 'create_session' %}" class="btn btn-primary">+ New Session</a>
+    </div>
+
+    {% for session in sessions %}
+        <div class="card">
+            <strong>{{ session.client.full_name }}</strong><br>
+            {{ session.scheduled_date }} - {{ session.scheduled_time }}<br>
+            {{ session.package.get_package_type_display }}<br>
+            {{ session.get_status_display }}
+        </div>
+    {% empty %}
+        <p>No sessions found.</p>
+    {% endfor %}
+</div>
+{% endblock %}

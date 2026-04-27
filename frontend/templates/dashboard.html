@@ -1,0 +1,205 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CareFlow Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">CareFlow</div>
+        <nav class="menu">
+            <a href="{% url 'dashboard' %}" onclick="closeSidebarOnMobile()">Dashboard</a>
+            <a href="{% url 'clients_list' %}" onclick="closeSidebarOnMobile()">Clients</a>
+            <a href="{% url 'packages_list' %}" onclick="closeSidebarOnMobile()">Packages</a>
+            <a href="{% url 'sessions_list' %}" onclick="closeSidebarOnMobile()">Sessions</a>
+            <a href="{% url 'installments_list' %}" onclick="closeSidebarOnMobile()">Installments</a>
+        </nav>
+    </aside>
+
+    <div class="main-area">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+                <h1>Dashboard</h1>
+            </div>
+            <p>Business overview</p>
+        </header>
+
+        <main class="content">
+
+            <h2 class="section-title">General Totals</h2>
+            <div class="cards">
+                <div class="card">
+                    <h2>Total Clients</h2>
+                    <p>{{ total_clients }}</p>
+                </div>
+
+                <div class="card">
+                    <h2>Total Packages</h2>
+                    <p>{{ total_packages }}</p>
+                </div>
+
+                <div class="card">
+                    <h2>Total Sessions</h2>
+                    <p>{{ total_sessions }}</p>
+                </div>
+
+                <div class="card">
+                    <h2>Total Installments</h2>
+                    <p>{{ total_installments }}</p>
+                </div>
+            </div>
+
+            <h2 class="section-title">Today's Schedule</h2>
+            {% if base_date %}
+                {% if today_sessions %}
+                    <div class="schedule-list">
+                        {% for session in today_sessions %}
+                            <div class="schedule-item">
+                                <div class="schedule-time">
+                                    {{ session.scheduled_time|time:"H:i" }}
+                                </div>
+
+                                <div class="schedule-info">
+                                    <div class="schedule-header">
+                                        <div class="schedule-client">
+                                            {{ session.client.full_name }}
+                                        </div>
+
+                                        <div class="session-counter">
+                                            {{ session.package.sessions_used }}/{{ session.package.total_sessions }}
+                                        </div>
+                                    </div>
+
+                                    <div class="schedule-package">
+                                        {{ session.package }}
+                                    </div>
+
+                                    <div class="schedule-address">
+                                        {{ session.client.street }}, {{ session.client.city }}, {{ session.client.state }}, {{ session.client.zip_code }}
+                                    </div>
+
+                                    <div class="action-buttons">
+                                        <a href="https://www.google.com/maps/search/?api=1&query={{ session.client.street|urlencode }}%20{{ session.client.city|urlencode }}%20{{ session.client.state|urlencode }}" target="_blank" class="btn-map">
+                                            Maps
+                                        </a>
+
+                                        <a href="https://waze.com/ul?q={{ session.client.street|urlencode }}%20{{ session.client.city|urlencode }}%20{{ session.client.state|urlencode }}" target="_blank" class="btn-map">
+                                            Waze
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="card">
+                        <h2>No sessions for this date</h2>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="card">
+                    <p>Select a date to view schedule.</p>
+                </div>
+            {% endif %}
+
+            <h2 class="section-title">Available Time Slots</h2>
+            <div class="card">
+                <form method="GET" style="margin-bottom: 20px;">
+                    <label><strong>Select date</strong></label><br>
+                    <input type="date" name="date" value="{{ selected_date }}" min="{{ today|date:'Y-m-d' }}" style="width: 240px; padding: 10px; margin-top: 8px;">
+                    <button type="submit" class="btn-map" style="margin-left: 10px;">View Slots</button>
+                </form>
+
+                {% if selected_date %}
+                    <h3>Available for {{ base_date }}</h3>
+
+                    {% if available_slots %}
+                        <div class="slots-grid">
+                            {% for slot in available_slots %}
+                                <a class="slot-button"
+                                    href="/schedule/create/?date={{ base_date|date:'Y-m-d' }}&time={{ slot|time:'H:i:s' }}">
+                                    {{ slot|time:"H:i" }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No available slots for this date.</p>
+                    {% endif %}
+                {% else %}
+                    <p>Select a date first. Available time slots will appear here.</p>
+                {% endif %}
+            </div>
+
+            <h2 class="section-title">Next Appointment</h2>
+            {% if next_session %}
+                <div class="card">
+                    <p><strong>{{ next_session.client.full_name }}</strong></p>
+                    <p>Date: {{ next_session.scheduled_date }}</p>
+                    <p>Time: {{ next_session.scheduled_time|time:"H:i" }}</p>
+                    <p>Package: {{ next_session.package }}</p>
+                    <p>
+                        {{ next_session.client.street }},
+                        {{ next_session.client.city }},
+                        {{ next_session.client.state }},
+                        {{ next_session.client.zip_code }}
+                    </p>
+
+                    <div class="action-buttons">
+                        <a href="{{ google_maps_url }}" target="_blank" class="btn-map">Google Maps</a>
+                        <a href="{{ waze_url }}" target="_blank" class="btn-map">Waze</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="card">
+                    <p>No upcoming session</p>
+                </div>
+            {% endif %}
+
+            <h2 class="section-title">Business Metrics</h2>
+            <div class="cards">
+                <div class="card">
+                    <h2>Active Packages</h2>
+                    <p>{{ active_packages }}</p>
+                </div>
+
+                <div class="card">
+                    <h2>Completed Packages</h2>
+                    <p>{{ completed_packages }}</p>
+                </div>
+
+                <div class="card">
+                    <h2>Completed Sessions</h2>
+                    <p>{{ completed_sessions }}</p>
+                </div>
+
+                <div class="card">
+                    <h2>Overdue Installments</h2>
+                    <p>{{ overdue_installments }}</p>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<script>
+function toggleMenu() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('collapsed');
+}
+
+function closeSidebarOnMobile() {
+    if (window.innerWidth <= 768) {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.add('collapsed');
+    }
+}
+</script>
+
+</body>
+</html>

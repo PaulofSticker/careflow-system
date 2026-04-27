@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header class="topbar">
+    <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        <h1>New Client</h1>
+    </div>
+    <p>Register a new client</p>
+</header>
+
+<div class="content">
+    <div class="card">
+        <h2 class="section-title">Client Information</h2>
+
+        {% if error_message %}
+        <div style="background:#ffe8e8; color:#a30000; padding:12px; border-radius:8px; margin-bottom:15px;">
+            {{ error_message }}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>Full Name *</strong></label><br>
+                <input type="text" name="full_name" style="width: 400px; padding: 10px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>Email</strong></label><br>
+                <input type="email" name="email" style="width: 400px; padding: 10px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>Phone *</strong></label><br>
+                <input type="text" name="phone" style="width: 300px; padding: 10px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>Street</strong></label><br>
+                <input type="text" name="street" style="width: 500px; padding: 10px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>City</strong></label><br>
+                <input type="text" name="city" style="width: 300px; padding: 10px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>State</strong></label><br>
+                <input type="text" name="state" style="width: 150px; padding: 10px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>ZIP Code</strong></label><br>
+                <input type="text" name="zip_code" style="width: 150px; padding: 10px;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>Notes</strong></label><br>
+                <textarea name="notes" rows="4" style="width: 500px; padding: 10px;"></textarea>
+            </div>
+
+            <button type="submit" class="btn-map">Save Client</button>
+            <a href="{% url 'clients_list' %}" style="margin-left: 10px;">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

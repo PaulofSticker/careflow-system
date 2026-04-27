@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareFlow</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">CareFlow</div>
+
+        <nav class="menu">
+            <a href="{% url 'dashboard' %}" onclick="closeSidebarOnMobile()">Dashboard</a>
+            <a href="{% url 'clients_list' %}" onclick="closeSidebarOnMobile()">Clients</a>
+            <a href="{% url 'packages_list' %}" onclick="closeSidebarOnMobile()">Packages</a>
+            <a href="{% url 'sessions_list' %}" onclick="closeSidebarOnMobile()">Sessions</a>
+            <a href="{% url 'installments_list' %}" onclick="closeSidebarOnMobile()">Installments</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-area">
+        {% block content %}{% endblock %}
+    </div>
+
+</div>
+
+<script>
+function toggleMenu() {
+    const sidebar = document.getElementById("sidebar");
+    sidebar.classList.toggle("open");
+}
+
+function closeSidebarOnMobile() {
+    if (window.innerWidth <= 768) {
+        const sidebar = document.getElementById("sidebar");
+        sidebar.classList.remove("open");
+    }
+}
+</script>
+
+</body>
+</html>
